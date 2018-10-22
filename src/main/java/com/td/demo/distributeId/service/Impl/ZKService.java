@@ -1,6 +1,7 @@
-package com.td.demo.distributeId.service;
+package com.td.demo.distributeId.service.Impl;
 
 import com.google.common.base.Preconditions;
+import com.td.demo.distributeId.service.IZKService;
 import com.td.demo.util.ExpUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 @Data
 @Slf4j
-public class ZKService {
+public class ZKService implements IZKService {
 
 
     /**

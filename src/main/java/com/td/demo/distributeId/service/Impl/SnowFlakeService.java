@@ -2,8 +2,6 @@ package com.td.demo.distributeId.service.Impl;
 
 import com.google.common.base.Preconditions;
 import com.td.demo.distributeId.service.IDistrIdService;
-import com.td.demo.distributeId.service.IdGenService;
-import com.td.demo.distributeId.service.ZKService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
