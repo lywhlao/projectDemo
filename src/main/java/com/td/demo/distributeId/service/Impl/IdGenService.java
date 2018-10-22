@@ -91,10 +91,6 @@ public class IdGenService {
                 //throw
                 throw new ProjectDemoException("time back");
             }
-
-            throw new RuntimeException(
-                    String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds",
-                            this.lastTimestamp - timestamp));
         }
 
         this.lastTimestamp = timestamp;
