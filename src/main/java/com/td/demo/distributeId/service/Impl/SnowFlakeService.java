@@ -43,7 +43,7 @@ public class SnowFlakeService implements IDistrIdService {
         Preconditions.checkArgument(NumberUtils.isCreatable(workId));
     }
 
-    public long getId(){
+    public long getId() throws InterruptedException {
         return idGenService.nextId();
     }
 

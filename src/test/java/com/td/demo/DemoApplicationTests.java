@@ -21,8 +21,10 @@ public class DemoApplicationTests {
 	public void contextLoads() throws SocketException {
 //		long id = snowFlakeService.getId();
 //		System.out.println(id);
-		Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-		System.out.println(NetworkInterface.getNetworkInterfaces());
+//		Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+//		System.out.println(NetworkInterface.getNetworkInterfaces());
+
+		System.out.println(4<<1);
 	}
 
 }

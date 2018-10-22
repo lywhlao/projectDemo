@@ -1,5 +1,6 @@
 package com.td.demo.distributeId.service.Impl;
 
+import com.td.demo.exception.ProjectDemoException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +57,11 @@ public class IdGenService {
         return new long[] { time, workerId, seq };
     }
 
-    public synchronized long nextId() {
+    /**
+     * @return
+     * @throws InterruptedException
+     */
+    public synchronized long nextId() throws InterruptedException {
         long timestamp = this.timeGen();
         if (this.lastTimestamp == timestamp) {
             this.sequence = this.sequence + 1 & this.sequenceMask;
@@ -67,6 +72,26 @@ public class IdGenService {
             this.sequence = 0;
         }
         if (timestamp < this.lastTimestamp) {
+
+            long offset = lastTimestamp - timestamp;
+            if (offset <= 5) {
+                try {
+                    //时间偏差大小小于5ms，则等待两倍时间
+                    wait(offset << 1);//wait
+                    timestamp = timeGen();
+                    if (timestamp < lastTimestamp) {
+                        //还是小于，抛异常并上报
+                        throw new ProjectDemoException("time back");
+                    }
+                } catch (InterruptedException e) {
+                    logger.error("nextId wait interupted",e);
+                    throw  e;
+                }
+            } else {
+                //throw
+                throw new ProjectDemoException("time back");
+            }
+
             throw new RuntimeException(
                     String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds",
                             this.lastTimestamp - timestamp));

@@ -6,5 +6,5 @@ public interface IDistrIdService {
      * get distribute Id
      * @return
      */
-    public long getId();
+    public long getId() throws InterruptedException;
 }
