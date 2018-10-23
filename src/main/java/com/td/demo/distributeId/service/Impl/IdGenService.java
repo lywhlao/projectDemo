@@ -84,7 +84,7 @@ public class IdGenService {
                         throw new ProjectDemoException("time back");
                     }
                 } catch (InterruptedException e) {
-                    logger.error("nextId wait interupted",e);
+                    logger.error("nextId wait interrupted",e);
                     throw  e;
                 }
             } else {

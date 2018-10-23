@@ -44,7 +44,9 @@ public class SnowFlakeService implements IDistrIdService {
     }
 
     public long getId() throws InterruptedException {
-        return idGenService.nextId();
+        long l = idGenService.nextId();
+        log.info("tag-->{},workId-->{},distId:{}",localTag,workId,l);
+        return l;
     }
 
 

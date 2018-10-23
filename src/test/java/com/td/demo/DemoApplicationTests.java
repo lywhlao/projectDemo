@@ -17,14 +17,12 @@ public class DemoApplicationTests {
 
 	@Autowired
 	SnowFlakeService snowFlakeService;
-	@Test
-	public void contextLoads() throws SocketException {
-//		long id = snowFlakeService.getId();
-//		System.out.println(id);
-//		Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-//		System.out.println(NetworkInterface.getNetworkInterfaces());
 
-		System.out.println(4<<1);
+
+	@Test
+	public void contextLoads() throws SocketException, InterruptedException {
+		long id = snowFlakeService.getId();
+		System.out.println(id);
 	}
 
 }
