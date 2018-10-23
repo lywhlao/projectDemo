@@ -93,6 +93,7 @@ public class ZKService implements IZKService {
 
     @PreDestroy
     public void destroy() {
+        watchDog.cancel();
         if (mClient != null) {
             mClient.close();
         }
@@ -168,13 +169,19 @@ public class ZKService implements IZKService {
                 return nData;
             }
         }
-        // create p node
+        // 设置临时工作节点
+        String currentWorkNode = createNode(CURRENT_WORK_DIR, node, "", CreateMode.EPHEMERAL);
+        if(StringUtils.isEmpty(currentWorkNode)){
+            throw new ProjectDemoException("already set by others tag"+node);
+        }
+
+        // 创建持久工作节点
         String success = createNode(P_WORK_DIR, node, "", CreateMode.PERSISTENT);
         if (StringUtils.isEmpty(success)) {
             return getNode(P_WORK_DIR, node);
         }
 
-        //创建p node成功,则创建 s node
+        // 创建临时节点，获取序号
         String esNode = createNode(ES_WORK_DIR, "", "", CreateMode.EPHEMERAL_SEQUENTIAL);
 
         if (StringUtils.isEmpty(esNode)) {
@@ -237,11 +244,7 @@ public class ZKService implements IZKService {
     public String createNode(String path, String nodeName, String data, CreateMode type) {
         String result = "";
         try {
-            if(type==CreateMode.EPHEMERAL_SEQUENTIAL||type==CreateMode.PERSISTENT_SEQUENTIAL){
-                result=mClient.create().withProtection().withMode(type).forPath(getPath(path,nodeName),data.getBytes(StandardCharsets.UTF_8));
-            }else{
-                result = mClient.create().withMode(type).forPath(getPath(path, nodeName), data.getBytes(StandardCharsets.UTF_8));
-            }
+            result = mClient.create().withMode(type).forPath(getPath(path, nodeName), data.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             log.error("createNode error", e);
         }

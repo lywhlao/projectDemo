@@ -2,6 +2,7 @@ package com.td.demo.distributeId.service.Impl;
 
 import com.google.common.base.Preconditions;
 import com.td.demo.distributeId.service.IDistrIdService;
+import com.td.demo.distributeId.service.ILocalTagService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,10 @@ import javax.annotation.PostConstruct;
 public class SnowFlakeService implements IDistrIdService {
 
 
-    @Value("${snowFlake.localTag}")
     private String localTag;
+
+    @Autowired
+    ILocalTagService localTagService;
 
     @Autowired
     ZKService zkService;
@@ -28,9 +31,14 @@ public class SnowFlakeService implements IDistrIdService {
 
     @PostConstruct
     public void init(){
+        initLocalTag();
         initWorkerId();
         idGenService=new IdGenService(Long.valueOf(workId));
 
+    }
+
+    private void initLocalTag() {
+        localTag=localTagService.getLocalTag();
     }
 
     /**

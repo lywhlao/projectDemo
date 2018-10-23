@@ -3,31 +3,37 @@ package com.td.demo.distributeId.service.Impl.tag;
 import com.td.demo.distributeId.service.ILocalTagService;
 import com.td.demo.exception.ProjectDemoException;
 import lombok.extern.slf4j.Slf4j;
-import sun.net.util.IPAddressUtil;
+import org.springframework.stereotype.Service;
 
+import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
 
 @Slf4j
+@Service
 public class MacLocalTagService implements ILocalTagService {
 
     @Override
     public String getLocalTag() {
 
+        InetAddress ip;
         try {
-            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-            while (networkInterfaces.hasMoreElements()){
-                NetworkInterface networkInterface = networkInterfaces.nextElement();
-                byte[] hardwareAddress = networkInterface.getHardwareAddress();
-                if(hardwareAddress!=null && hardwareAddress.length>0){
-                    return new String(hardwareAddress);
-                }
+
+            ip = InetAddress.getLocalHost();
+            NetworkInterface network = NetworkInterface.getByInetAddress(ip);
+            byte[] mac = network.getHardwareAddress();
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < mac.length; i++) {
+                sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
             }
-        } catch (SocketException e) {
-            log.error("get network error",e);
-            throw new ProjectDemoException("network error");
+            return sb.toString();
+
+        } catch (Exception e) {
+            log.error("getLocalTag error ",e);
         }
-        throw new ProjectDemoException("can not get NetworkInterface");
+
+        throw new ProjectDemoException("get mac adresss error");
     }
+
+
 }
